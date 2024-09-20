@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MADUR</string>
+    <string name="description_text">Привет \n Наслаждайся отборочными. \n Делай хорошо. \n Будь внимателен.</string>
+    <string name="login">Войти в аккаунт</string>
+</resources>

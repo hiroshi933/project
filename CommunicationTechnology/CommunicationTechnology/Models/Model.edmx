@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище CommunicationBDModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="NumberPhone" />
+          </Key>
+          <Property Name="NumberPhone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IdTarif" Type="int" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="30" />
+          <Property Name="PatronymicName" Type="nvarchar" MaxLength="30" />
+          <Property Name="DateBirthday" Type="date" />
+          <Property Name="PassportSerial" Type="nvarchar" MaxLength="4" />
+          <Property Name="PassportNumber" Type="nvarchar" MaxLength="6" />
+          <Property Name="DatePassport" Type="date" />
+        </EntityType>
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="CodeServies" />
+          </Key>
+          <Property Name="CodeServies" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="ServiceName" Type="nvarchar" MaxLength="20" />
+          <Property Name="SalaryService" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="ConnectPrice" Type="decimal" Precision="10" Scale="3" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Tariffs">
+          <Key>
+            <PropertyRef Name="IdTarif" />
+          </Key>
+          <Property Name="IdTarif" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TarifName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Internet" Type="nchar" MaxLength="10" />
+          <Property Name="CountMinutes" Type="int" />
+          <Property Name="CountSMS" Type="int" />
+          <Property Name="Salary" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="UsingService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="CodeService" Type="varchar" MaxLength="3" />
+          <Property Name="DateConnection" Type="date" />
+          <Property Name="NumberPhone" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_Clients_Tariffs">
+          <End Role="Tariffs" Type="Self.Tariffs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Clients" Type="Self.Clients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tariffs">
+              <PropertyRef Name="IdTarif" />
+            </Principal>
+            <Dependent Role="Clients">
+              <PropertyRef Name="IdTarif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsingService_Clients">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="NumberPhone" />
+            </Principal>
+            <Dependent Role="UsingService">
+              <PropertyRef Name="NumberPhone" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsingService_Services">
+          <End Role="Services" Type="Self.Services" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Services">
+              <PropertyRef Name="CodeServies" />
+            </Principal>
+            <Dependent Role="UsingService">
+              <PropertyRef Name="CodeService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище CommunicationBDModelContainer">
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Services" EntityType="Self.Services" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tariffs" EntityType="Self.Tariffs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsingService" EntityType="Self.UsingService" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Clients_Tariffs" Association="Self.FK_Clients_Tariffs">
+            <End Role="Tariffs" EntitySet="Tariffs" />
+            <End Role="Clients" EntitySet="Clients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsingService_Clients" Association="Self.FK_UsingService_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="UsingService" EntitySet="UsingService" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsingService_Services" Association="Self.FK_UsingService_Services">
+            <End Role="Services" EntitySet="Services" />
+            <End Role="UsingService" EntitySet="UsingService" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CommunicationBDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="NumberPhone" />
+          </Key>
+          <Property Name="NumberPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdTarif" Type="Int32" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PatronymicName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="DateBirthday" Type="DateTime" Precision="0" />
+          <Property Name="PassportSerial" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="PassportNumber" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="DatePassport" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Tariffs" Relationship="Self.FK_Clients_Tariffs" FromRole="Clients" ToRole="Tariffs" />
+          <NavigationProperty Name="UsingService" Relationship="Self.FK_UsingService_Clients" FromRole="Clients" ToRole="UsingService" />
+        </EntityType>
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="CodeServies" />
+          </Key>
+          <Property Name="CodeServies" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ServiceName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SalaryService" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="ConnectPrice" Type="Decimal" Precision="10" Scale="3" />
+          <NavigationProperty Name="UsingService" Relationship="Self.FK_UsingService_Services" FromRole="Services" ToRole="UsingService" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Tariffs">
+          <Key>
+            <PropertyRef Name="IdTarif" />
+          </Key>
+          <Property Name="IdTarif" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TarifName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Internet" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="CountMinutes" Type="Int32" />
+          <Property Name="CountSMS" Type="Int32" />
+          <Property Name="Salary" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="Clients" Relationship="Self.FK_Clients_Tariffs" FromRole="Tariffs" ToRole="Clients" />
+        </EntityType>
+        <EntityType Name="UsingService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="CodeService" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="DateConnection" Type="DateTime" Precision="0" />
+          <Property Name="NumberPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Clients" Relationship="Self.FK_UsingService_Clients" FromRole="UsingService" ToRole="Clients" />
+          <NavigationProperty Name="Services" Relationship="Self.FK_UsingService_Services" FromRole="UsingService" ToRole="Services" />
+        </EntityType>
+        <Association Name="FK_Clients_Tariffs">
+          <End Role="Tariffs" Type="Self.Tariffs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Clients" Type="Self.Clients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tariffs">
+              <PropertyRef Name="IdTarif" />
+            </Principal>
+            <Dependent Role="Clients">
+              <PropertyRef Name="IdTarif" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsingService_Clients">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="NumberPhone" />
+            </Principal>
+            <Dependent Role="UsingService">
+              <PropertyRef Name="NumberPhone" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsingService_Services">
+          <End Role="Services" Type="Self.Services" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Services">
+              <PropertyRef Name="CodeServies" />
+            </Principal>
+            <Dependent Role="UsingService">
+              <PropertyRef Name="CodeService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CommunicationBDEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Clients" />
+          <EntitySet Name="Services" EntityType="Self.Services" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Tariffs" EntityType="Self.Tariffs" />
+          <EntitySet Name="UsingService" EntityType="Self.UsingService" />
+          <AssociationSet Name="FK_Clients_Tariffs" Association="Self.FK_Clients_Tariffs">
+            <End Role="Tariffs" EntitySet="Tariffs" />
+            <End Role="Clients" EntitySet="Clients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsingService_Clients" Association="Self.FK_UsingService_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="UsingService" EntitySet="UsingService" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsingService_Services" Association="Self.FK_UsingService_Services">
+            <End Role="Services" EntitySet="Services" />
+            <End Role="UsingService" EntitySet="UsingService" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище CommunicationBDModelContainer" CdmEntityContainer="CommunicationBDEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="CommunicationBDModel.Clients">
+              <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="NumberPhone" ColumnName="NumberPhone" />
+                <ScalarProperty Name="IdTarif" ColumnName="IdTarif" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="PatronymicName" ColumnName="PatronymicName" />
+                <ScalarProperty Name="DateBirthday" ColumnName="DateBirthday" />
+                <ScalarProperty Name="PassportSerial" ColumnName="PassportSerial" />
+                <ScalarProperty Name="PassportNumber" ColumnName="PassportNumber" />
+                <ScalarProperty Name="DatePassport" ColumnName="DatePassport" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Services">
+            <EntityTypeMapping TypeName="CommunicationBDModel.Services">
+              <MappingFragment StoreEntitySet="Services">
+                <ScalarProperty Name="CodeServies" ColumnName="CodeServies" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="SalaryService" ColumnName="SalaryService" />
+                <ScalarProperty Name="ConnectPrice" ColumnName="ConnectPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CommunicationBDModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tariffs">
+            <EntityTypeMapping TypeName="CommunicationBDModel.Tariffs">
+              <MappingFragment StoreEntitySet="Tariffs">
+                <ScalarProperty Name="IdTarif" ColumnName="IdTarif" />
+                <ScalarProperty Name="TarifName" ColumnName="TarifName" />
+                <ScalarProperty Name="Internet" ColumnName="Internet" />
+                <ScalarProperty Name="CountMinutes" ColumnName="CountMinutes" />
+                <ScalarProperty Name="CountSMS" ColumnName="CountSMS" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsingService">
+            <EntityTypeMapping TypeName="CommunicationBDModel.UsingService">
+              <MappingFragment StoreEntitySet="UsingService">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CodeService" ColumnName="CodeService" />
+                <ScalarProperty Name="DateConnection" ColumnName="DateConnection" />
+                <ScalarProperty Name="NumberPhone" ColumnName="NumberPhone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

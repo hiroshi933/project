@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище CommunicationBDModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Clients">
+    <Key>
+      <PropertyRef Name="NumberPhone" />
+    </Key>
+    <Property Name="NumberPhone" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="IdTarif" Type="int" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="30" />
+    <Property Name="PatronymicName" Type="nvarchar" MaxLength="30" />
+    <Property Name="DateBirthday" Type="date" />
+    <Property Name="PassportSerial" Type="nvarchar" MaxLength="4" />
+    <Property Name="PassportNumber" Type="nvarchar" MaxLength="6" />
+    <Property Name="DatePassport" Type="date" />
+  </EntityType>
+  <EntityType Name="Services">
+    <Key>
+      <PropertyRef Name="CodeServies" />
+    </Key>
+    <Property Name="CodeServies" Type="varchar" MaxLength="3" Nullable="false" />
+    <Property Name="ServiceName" Type="nvarchar" MaxLength="20" />
+    <Property Name="SalaryService" Type="decimal" Precision="10" Scale="3" />
+    <Property Name="ConnectPrice" Type="decimal" Precision="10" Scale="3" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Tariffs">
+    <Key>
+      <PropertyRef Name="IdTarif" />
+    </Key>
+    <Property Name="IdTarif" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TarifName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Internet" Type="nchar" MaxLength="10" />
+    <Property Name="CountMinutes" Type="int" />
+    <Property Name="CountSMS" Type="int" />
+    <Property Name="Salary" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="UsingService">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CodeService" Type="varchar" MaxLength="3" />
+    <Property Name="DateConnection" Type="date" />
+    <Property Name="NumberPhone" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <Association Name="FK_Clients_Tariffs">
+    <End Role="Tariffs" Type="Self.Tariffs" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Clients" Type="Self.Clients" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tariffs">
+        <PropertyRef Name="IdTarif" />
+      </Principal>
+      <Dependent Role="Clients">
+        <PropertyRef Name="IdTarif" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsingService_Clients">
+    <End Role="Clients" Type="Self.Clients" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clients">
+        <PropertyRef Name="NumberPhone" />
+      </Principal>
+      <Dependent Role="UsingService">
+        <PropertyRef Name="NumberPhone" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsingService_Services">
+    <End Role="Services" Type="Self.Services" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UsingService" Type="Self.UsingService" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Services">
+        <PropertyRef Name="CodeServies" />
+      </Principal>
+      <Dependent Role="UsingService">
+        <PropertyRef Name="CodeService" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище CommunicationBDModelContainer">
+    <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Services" EntityType="Self.Services" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tariffs" EntityType="Self.Tariffs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsingService" EntityType="Self.UsingService" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Clients_Tariffs" Association="Self.FK_Clients_Tariffs">
+      <End Role="Tariffs" EntitySet="Tariffs" />
+      <End Role="Clients" EntitySet="Clients" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsingService_Clients" Association="Self.FK_UsingService_Clients">
+      <End Role="Clients" EntitySet="Clients" />
+      <End Role="UsingService" EntitySet="UsingService" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsingService_Services" Association="Self.FK_UsingService_Services">
+      <End Role="Services" EntitySet="Services" />
+      <End Role="UsingService" EntitySet="UsingService" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
